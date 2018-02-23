@@ -1,6 +1,5 @@
 import * as TWEEN from 'tween.js';
 import * as THREE from 'three';
-import JONATHON from './jonathan-hs.jpg';
 import EIGEN from './tb.jpg';
 import CARPET from './carpet.jpg';
 
@@ -84,11 +83,11 @@ const Game = () => {
         map: THREE.ImageUtils.loadTexture( image )
       })
     ]);
-    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
     that.objects.cube = new THREE.Mesh( geometry, material );
     that.objects.cube.castShadow = true;
     that.objects.cube.receiveShadow = true;
-
+    that.objects.cube.position.set(0.05, 2.02 , 14);
     that.scene.add( that.objects.cube );
   }
 
@@ -147,98 +146,24 @@ const Game = () => {
   }
 
   that.throw = (object, e) => {
-    // console.log('throwing')
-    // let mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-    // let mouseY = - (e.clientY / window.innerHeight) * 2 + 1;
-
-    // var tweenVector3 = new TWEEN.Tween(object)
-    //   .to({ x: mouseX, y: mouseY, z: -5 }, 1000)
-    //   .easing(TWEEN.Easing.Quadratic.In);
-
-    // tweenVector3.start()
-
     that.throwing = true;
 
   };
 
-  // that.throw = (object, event) => {
-  //   console.log('object')
-
-  //   that.mouseCoords.set(
-  //     ( event.clientX / window.innerWidth ) * 2 - 1,
-  //     - ( event.clientY / window.innerHeight ) * 2 + 1
-  //   );
-
-  //   that.raycaster.setFromCamera( that.mouseCoords, that.camera );
-  //   var ballMass = 35;
-  //   var ballRadius = 0.4;
-
-  //   var ballShape = new Ammo.btSphereShape( ballRadius );
-  //   ballShape.setMargin( 0.05 );
-
-  //   that.pos.copy( that.raycaster.ray.direction );
-  //   that.pos.add( that.raycaster.ray.origin );
-  //   that.quat.set( 0, 0, 0, 1 );
-  //   var ballBody = that.createRigidBody( object, ballShape, ballMass, that.pos, that.quat, {x: 0, y: 0, z: -0.1} );
-  //   // console.log(ballBody)
-  //   // that.pos.copy( that.raycaster.ray.direction );
-  //   // that.pos.multiplyScalar( 24 );
-  //   ballBody.setLinearVelocity( new Ammo.btVector3( 0, 0, -0.01 ) );
-  // }
-
-  that.createRigidBody = ( object, physicsShape, mass, pos, quat, vel, angVel ) => {
-    if ( pos ) {
-      object.position.copy( pos );
-    }
-    else {
-      pos = object.position;
-    }
-    if ( quat ) {
-      object.quaternion.copy( quat );
-    }
-    else {
-      quat = object.quaternion;
-    }
-    var transform = new Ammo.btTransform();
-    transform.setIdentity();
-    transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-    transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
-    var motionState = new Ammo.btDefaultMotionState( transform );
-    var localInertia = new Ammo.btVector3( 0, 0, 0 );
-    physicsShape.calculateLocalInertia( mass, localInertia );
-    var rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, physicsShape, localInertia );
-    var body = new Ammo.btRigidBody( rbInfo );
-    body.setFriction( 0.5 );
-    if ( vel ) {
-      body.setLinearVelocity( new Ammo.btVector3( vel.x, vel.y, vel.z ) );
-    }
-    if ( angVel ) {
-      body.setAngularVelocity( new Ammo.btVector3( angVel.x, angVel.y, angVel.z ) );
-    }
-    object.userData.physicsBody = body;
-    object.userData.collided = false;
-    that.scene.add( object );
-    // if ( mass > 0 ) {
-    //   rigidBodies.push( object );
-    //   // Disable deactivation
-    //   body.setActivationState( 4 );
-    // }
-    that.physicsWorld.addRigidBody( body );
-    return body;
-  }
-
-
-  that.createPlane = () => {
-
   that.animate = () => {
     that.renderer.render( that.scene, that.camera );
 
+    if (that.objects.cube) {
+      console.log(that.objects.cube.position)
+      if (that.throwing)
+        that.objects.cube.translateZ(-0.5)
+      if (that.objects.cube.position.z == -1) {
+        that.throwing = false;
+        that.scene.remove( that.objects.cube );
+        window.dispatchEvent(new Event('shot'));
+      }
 
-    if (that.throwing)
-      that.objects.cube.translateZ(-0.5)
-console.log(that.objects.cube)
-    if (that.objects.cube.position.z == -10)
-      that.throwing = false;
+    }
 
     requestAnimationFrame( that.animate )
   }
@@ -254,12 +179,12 @@ console.log(that.objects.cube)
     var pos = that.camera.position.clone().add(
       dir.multiplyScalar( distance )
     );
-    object.position.set(pos.x, pos.y, 0);
+    object.position.set(pos.x, pos.y, 12);
   }
 
   that.start = () => {
     that.configureRenderer();
-    that.createCube(JONATHON);
+
     that.createWalls();
     that.animate();
 
