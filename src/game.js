@@ -1,8 +1,6 @@
 import * as THREE from 'three';
 import JONATHON from './jonathan-hs.jpg';
-
-const WALL_COLOUR = 'yellow';
-const FLOOR_COLOUR = 'blue';
+import EIGEN from './tb.jpg';
 
 const Game = () => {
 
@@ -47,10 +45,9 @@ const Game = () => {
     that.scene.add( that.objects.cube );
   }
 
-  that.addWall = (vertices, colour) => {
+  that.addWall = (vertices, material) => {
     const planeGeometry = new THREE.PlaneGeometry( 8, 8 );
-    const planeMaterial = new THREE.MeshBasicMaterial( {color: colour, side: THREE.DoubleSide} );
-    const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+    const plane = new THREE.Mesh( planeGeometry, material );
 
     vertices.forEach((coords, i) => {
       planeGeometry.vertices[i].x = coords[0];
@@ -66,7 +63,7 @@ const Game = () => {
     const right = 5;
     const up = 5;
     const down = -1;
-    const near = 10;
+    const near = 15;
     const far = 0;
 
     // vertices for the room
@@ -79,18 +76,24 @@ const Game = () => {
     const bottomRightNear = [right, down, near];
     const topRightNear = [right, up, near];
 
+    const yellowMaterial = new THREE.MeshBasicMaterial( {color: 'yellow', side: THREE.DoubleSide} );
+    const blueMaterial = new THREE.MeshBasicMaterial( {color: 'blue', side: THREE.DoubleSide} );
+    const eigenMaterial = new THREE.MeshBasicMaterial({
+      map:THREE.ImageUtils.loadTexture(EIGEN)
+    });
+
     // back
     that.addWall(
-      [ bottomLeftFar, topLeftFar, bottomRightFar, topRightFar ], WALL_COLOUR);
+      [ bottomLeftFar, topLeftFar, bottomRightFar, topRightFar ], eigenMaterial);
     // left
     that.addWall(
-      [ bottomLeftNear, topLeftNear, bottomLeftFar, topLeftFar ], WALL_COLOUR);
+      [ bottomLeftNear, topLeftNear, bottomLeftFar, topLeftFar ], yellowMaterial);
     // right
     that.addWall(
-      [ bottomRightFar, topRightFar, bottomRightNear, topRightNear ], WALL_COLOUR);
+      [ bottomRightFar, topRightFar, bottomRightNear, topRightNear ], yellowMaterial);
     // floor
     that.addWall(
-      [ bottomLeftNear, bottomLeftFar, bottomRightNear, bottomRightFar ], FLOOR_COLOUR);
+      [ bottomLeftNear, bottomLeftFar, bottomRightNear, bottomRightFar ], blueMaterial);
   }
 
   that.animate = () => {
@@ -118,7 +121,7 @@ const Game = () => {
     that.createWalls();
     that.animate();
 
-    that.camera.position.y = 3;
+    that.camera.position.y = 2;
     that.camera.position.z = 15;
     that.camera.lookAt = (0, 0, 0)
   }
