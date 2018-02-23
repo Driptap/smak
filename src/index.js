@@ -6,7 +6,6 @@ document.getElementById('root').appendChild(game.renderer.domElement);
 game.start();
 
 
-
-document.addEventListener('mousemove', e => game.move(game.objects.cube, e))
-
+document.getElementById('root').addEventListener('click', e => game.throw(game.objects.cube, e));
+document.addEventListener('mousemove', e => game.move(game.objects.cube, e));
 
