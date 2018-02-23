@@ -20,6 +20,25 @@ const Game = () => {
     that.scene.add( cube );
   }
 
+  that.createPlane = () => {
+    const planeGeometry = new THREE.PlaneGeometry( 8, 8 );
+    const planeMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+    const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+
+    const planeCoords = [
+      [-3, -1, -3],
+      [-3, 5, -3],
+      [3, -1, -3],
+      [3, 5, -3],
+    ];
+    planeCoords.forEach((coords, i) => {
+      planeGeometry.vertices[i].x = coords[0];
+      planeGeometry.vertices[i].y = coords[1];
+      planeGeometry.vertices[i].z = coords[2];
+    });
+
+    that.scene.add( plane );
+  }
 
   that.animate = () => {
     that.renderer.render( that.scene, that.camera );
@@ -29,8 +48,8 @@ const Game = () => {
   that.start = () => {
     that.configureRenderer();
     that.createCube();
+    that.createPlane();
     that.animate();
-
 
     that.camera.position.y = 1;
     that.camera.position.z = 5;
