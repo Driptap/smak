@@ -14,6 +14,9 @@
   const renderer = new THREE.WebGLRenderer();
   renderer.setSize( window.innerWidth, window.innerHeight );
 
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
 
   const geometry = new THREE.BoxGeometry(2, 2, 2);
   const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -27,8 +30,17 @@
   camera.position.y = 1.5;
   camera.position.z = 5;
 
-  var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-  scene.add( directionalLight );
+  //Create a DirectionalLight and turn on shadows for the light
+  var light = new THREE.DirectionalLight( 0xffffff, 1, 100 );
+  light.position.set( 0, 1, 0 );      //default; light shining from top
+  light.castShadow = true;            // default false
+  scene.add( light );
+
+  //Set up shadow properties for the light
+  light.shadow.mapSize.width = 512;  // default
+  light.shadow.mapSize.height = 512; // default
+  light.shadow.camera.near = 0.5;    // default
+  light.shadow.camera.far = 500;     // default
 
   function animate() {
     // cube.rotation.x = cube.rotation.x + 0.1;
