@@ -87,10 +87,10 @@ const Game = () => {
       [ bottomLeftFar, topLeftFar, bottomRightFar, topRightFar ], eigenMaterial);
     // left
     that.addWall(
-      [ bottomLeftNear, topLeftNear, bottomLeftFar, topLeftFar ], yellowMaterial);
+      [ bottomLeftNear, topLeftNear, bottomLeftFar, topLeftFar ], eigenMaterial);
     // right
     that.addWall(
-      [ bottomRightFar, topRightFar, bottomRightNear, topRightNear ], yellowMaterial);
+      [ bottomRightFar, topRightFar, bottomRightNear, topRightNear ], eigenMaterial);
     // floor
     that.addWall(
       [ bottomLeftNear, bottomLeftFar, bottomRightNear, bottomRightFar ], blueMaterial);
