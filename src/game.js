@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import JONATHON from './jonathan-hs.jpg';
 
 const Game = () => {
 
@@ -15,16 +16,40 @@ const Game = () => {
     that.renderer.setSize( window.innerWidth, window.innerHeight );
   }
 
-  that.createCube = () => {
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+  that.createCube = image => {
+
+    let material = new THREE.MeshFaceMaterial( [
+      new THREE.MeshBasicMaterial( {
+        map: THREE.ImageUtils.loadTexture( image )
+      }),
+      new THREE.MeshBasicMaterial( {
+        map: THREE.ImageUtils.loadTexture( image )
+      }),
+      new THREE.MeshBasicMaterial( {
+        map: THREE.ImageUtils.loadTexture( image )
+      }),
+      new THREE.MeshBasicMaterial( {
+        map: THREE.ImageUtils.loadTexture( image )
+      }),
+      new THREE.MeshBasicMaterial( {
+        map: THREE.ImageUtils.loadTexture( image )
+      }),
+      new THREE.MeshBasicMaterial( {
+        map: THREE.ImageUtils.loadTexture( image )
+      })
+    ]);
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
+
     that.objects.cube = new THREE.Mesh( geometry, material );
     that.scene.add( that.objects.cube );
   }
 
   that.createPlane = () => {
     const planeGeometry = new THREE.PlaneGeometry( 8, 8 );
-    const planeMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+    const planeMaterial = new THREE.MeshBasicMaterial( {
+      color: 0xffff00,
+      side: THREE.DoubleSide,
+    } );
     const plane = new THREE.Mesh( planeGeometry, planeMaterial );
 
     const planeCoords = [
@@ -50,18 +75,20 @@ const Game = () => {
   that.move = (object, e) => {
     let mouseX = (e.clientX / window.innerWidth) * 2 - 1;
     let mouseY = - (e.clientY / window.innerHeight) * 2 + 1;
-
     var vector = new THREE.Vector3(mouseX, mouseY, 0.5);
+
     vector.unproject( that.camera );
     var dir = vector.sub( that.camera.position ).normalize();
     var distance = - that.camera.position.z / dir.z;
-    var pos = that.camera.position.clone().add(dir.multiplyScalar( distance ));
+    var pos = that.camera.position.clone().add(
+      dir.multiplyScalar( distance )
+    );
     object.position.set(pos.x, pos.y, 0);
   }
 
   that.start = () => {
     that.configureRenderer();
-    that.createCube();
+    that.createCube(JONATHON);
     that.createPlane();
     that.animate();
 
