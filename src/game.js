@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import JONATHON from './jonathan-hs.jpg';
 
+const WALL_COLOUR = 'yellow';
+const FLOOR_COLOUR = 'blue';
+
 const Game = () => {
 
   let that = {};
@@ -44,27 +47,50 @@ const Game = () => {
     that.scene.add( that.objects.cube );
   }
 
-  that.createPlane = () => {
+  that.addWall = (vertices, colour) => {
     const planeGeometry = new THREE.PlaneGeometry( 8, 8 );
-    const planeMaterial = new THREE.MeshBasicMaterial( {
-      color: 0xffff00,
-      side: THREE.DoubleSide,
-    } );
+    const planeMaterial = new THREE.MeshBasicMaterial( {color: colour, side: THREE.DoubleSide} );
     const plane = new THREE.Mesh( planeGeometry, planeMaterial );
 
-    const planeCoords = [
-      [-3, -1, -3],
-      [-3, 5, -3],
-      [3, -1, -3],
-      [3, 5, -3],
-    ];
-    planeCoords.forEach((coords, i) => {
+    vertices.forEach((coords, i) => {
       planeGeometry.vertices[i].x = coords[0];
       planeGeometry.vertices[i].y = coords[1];
       planeGeometry.vertices[i].z = coords[2];
     });
 
     that.scene.add( plane );
+  }
+
+  that.createWalls = () => {
+    const left = -5;
+    const right = 5;
+    const up = 5;
+    const down = -1;
+    const near = 10;
+    const far = 0;
+
+    // vertices for the room
+    const bottomLeftFar = [left, down, far];
+    const topLeftFar =  [left, up, far];
+    const bottomRightFar = [right, down, far];
+    const topRightFar = [right, up, far];
+    const bottomLeftNear =  [left, down, near];
+    const topLeftNear = [left, up, near];
+    const bottomRightNear = [right, down, near];
+    const topRightNear = [right, up, near];
+
+    // back
+    that.addWall(
+      [ bottomLeftFar, topLeftFar, bottomRightFar, topRightFar ], WALL_COLOUR);
+    // left
+    that.addWall(
+      [ bottomLeftNear, topLeftNear, bottomLeftFar, topLeftFar ], WALL_COLOUR);
+    // right
+    that.addWall(
+      [ bottomRightFar, topRightFar, bottomRightNear, topRightNear ], WALL_COLOUR);
+    // floor
+    that.addWall(
+      [ bottomLeftNear, bottomLeftFar, bottomRightNear, bottomRightFar ], FLOOR_COLOUR);
   }
 
   that.animate = () => {
@@ -89,11 +115,12 @@ const Game = () => {
   that.start = () => {
     that.configureRenderer();
     that.createCube(JONATHON);
-    that.createPlane();
+    that.createWalls();
     that.animate();
 
-    that.camera.position.y = 1;
-    that.camera.position.z = 5;
+    that.camera.position.y = 3;
+    that.camera.position.z = 15;
+    that.camera.lookAt = (0, 0, 0)
   }
 
 
