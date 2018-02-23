@@ -1,0 +1,51 @@
+
+<html>
+
+<body>
+  <div id="body"></div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/90/three.min.js"></script>
+
+<script>
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera( 75,
+    window.innerWidth / window.innerHeight, 0.1, 1000 );
+  const renderer = new THREE.WebGLRenderer();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+
+
+  const geometry = new THREE.BoxGeometry(2, 2, 2);
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+  const cube = new THREE.Mesh( geometry, material );
+  scene.add( cube );
+
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.enabled
+
+  camera.position.x = 1.5;
+  camera.position.y = 1.5;
+  camera.position.z = 5;
+
+  var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+  scene.add( directionalLight );
+
+  function animate() {
+    // cube.rotation.x = cube.rotation.x + 0.1;
+    // cube.rotation.y = cube.rotation.y + 0.1;
+    // cube.rotation.z = cube.rotation.y + 0.1;
+
+
+    requestAnimationFrame( animate );
+    renderer.render( scene, camera );
+  }
+  animate();
+
+
+  document.getElementById('body').appendChild( renderer.domElement );
+
+
+</script>
+
+</body>
+</html>
