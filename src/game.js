@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import JONATHON from './jonathan-hs.jpg';
 import EIGEN from './tb.jpg';
+import CARPET from './carpet.jpg';
 
 const Game = () => {
 
@@ -76,10 +77,11 @@ const Game = () => {
     const bottomRightNear = [right, down, near];
     const topRightNear = [right, up, near];
 
-    const yellowMaterial = new THREE.MeshBasicMaterial( {color: 'yellow', side: THREE.DoubleSide} );
-    const blueMaterial = new THREE.MeshBasicMaterial( {color: 'blue', side: THREE.DoubleSide} );
     const eigenMaterial = new THREE.MeshBasicMaterial({
       map:THREE.ImageUtils.loadTexture(EIGEN)
+    });
+    const carpetMaterial = new THREE.MeshBasicMaterial({
+      map:THREE.ImageUtils.loadTexture(CARPET)
     });
 
     // back
@@ -93,7 +95,7 @@ const Game = () => {
       [ bottomRightFar, topRightFar, bottomRightNear, topRightNear ], eigenMaterial);
     // floor
     that.addWall(
-      [ bottomLeftNear, bottomLeftFar, bottomRightNear, bottomRightFar ], blueMaterial);
+      [ bottomLeftNear, bottomLeftFar, bottomRightNear, bottomRightFar ], carpetMaterial);
   }
 
   that.animate = () => {
