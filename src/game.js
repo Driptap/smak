@@ -4,6 +4,8 @@ const Game = () => {
 
   let that = {};
 
+  that.objects = {};
+
   that.scene = new THREE.Scene();
   that.camera = new THREE.PerspectiveCamera( 75,
     window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -16,8 +18,8 @@ const Game = () => {
   that.createCube = () => {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh( geometry, material );
-    that.scene.add( cube );
+    that.objects.cube = new THREE.Mesh( geometry, material );
+    that.scene.add( that.objects.cube );
   }
 
   that.createPlane = () => {
@@ -43,6 +45,18 @@ const Game = () => {
   that.animate = () => {
     that.renderer.render( that.scene, that.camera );
     requestAnimationFrame( that.animate )
+  }
+
+  that.move = (object, e) => {
+    let mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+    let mouseY = - (e.clientY / window.innerHeight) * 2 + 1;
+
+    var vector = new THREE.Vector3(mouseX, mouseY, 0.5);
+    vector.unproject( that.camera );
+    var dir = vector.sub( that.camera.position ).normalize();
+    var distance = - that.camera.position.z / dir.z;
+    var pos = that.camera.position.clone().add(dir.multiplyScalar( distance ));
+    object.position.set(pos.x, pos.y, 0);
   }
 
   that.start = () => {
